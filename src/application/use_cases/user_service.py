@@ -1,8 +1,9 @@
 from src.application.use_cases.auth_service import AuthService
 from typing import List, Optional
 from src.domain.entity.user import User
+from src.core.base_service import BaseService
 
-class UserService:
+class UserService(BaseService):  # ✅ Hereda de BaseService
     def __init__(self, auth_service: AuthService):
         """Inicializa la lista con tres usuarios quemados"""
         self.users: List[User] = [
@@ -13,43 +14,24 @@ class UserService:
         self.auth_service = auth_service
 
     def get_users(self) -> List[User]:
-        """Devuelve todos los usuarios"""
-        return self.users
+        """Devuelve todos los usuarios, ahora usando BaseService"""
+        return self.execute(lambda: self.users)  # ✅ Manejo de errores con `execute`
 
     def get_user_by_id(self, user_id: int) -> Optional[User]:
         """Busca un usuario por ID"""
-        for user in self.users:
-            if user.id == user_id:
-                return user
-        return None
+        return self.execute(lambda: next((user for user in self.users if user.id == user_id), None))
 
     def create_user(self, user: User) -> User:
         """Crea un usuario y lo guarda en la lista"""
+        return self.execute(lambda: self._add_user(user))
+
+    def _add_user(self, user: User) -> User:
+        """Método privado para agregar un usuario a la lista"""
+        if any(u.email == user.email for u in self.users):
+            raise ValueError("El email ya está registrado")  # `BaseService` lo atrapará
         self.users.append(user)
         return user
 
-    def get_user_roles(self, user_id: int):
-        return self.auth_service.get_roles(user_id)  # 👈 Llamando a otro servicio
-
-# from src.domain.entity.user import User
-# from typing import List, Optional
-
-# class UserService:
-#     def __init__(self):
-#         self.users: List[User] = []  # Simulación de base de datos en memoria
-
-#     def get_users(self):
-#         """Devuelve todos los usuarios (simulados)"""
-#         return self.users if self.users else [{"name": "Julian", "age": 31}]
-
-#     def get_user_by_id(self, user_id: int) -> Optional[User]:
-#         """Busca un usuario por ID"""
-#         for user in self.users:
-#             if user.id == user_id:
-#                 return user
-#         return None
-
-#     def create_user(self, user: User):
-#         """Crea un usuario y lo guarda en la lista"""
-#         self.users.append(user)
-#         return user
+    async def get_user_roles(self, user_id: int):
+        """Obtiene roles del usuario usando AuthService"""
+        return self.execute(lambda: self.auth_service.get_roles(user_id))  # ✅ Protección contra fallos en AuthService
