@@ -4,7 +4,7 @@ from src.application.dto.user_dto import UserDTO
 from src.core.base_service import BaseService
 from src.infraestructure.repositories.user_repository import UserRepository
 
-class UserServiceDB(BaseService,):  # ✅ Hereda de BaseService
+class UserServiceDB(BaseService):  # ✅ Hereda de BaseService
     def __init__(self, user_repository: UserRepository):
         # self
         self.user_repository = user_repository
