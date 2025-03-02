@@ -17,15 +17,15 @@ def create_user(user_data: UserDTO, user_service_db: UserServiceDB = Depends(use
     user_create = user_service_db.create_user(user_data)
     return UserDTO(id=user_create.id, name=user_create.name, email=user_create.email, password=user_create.password)
 
-@router.get("/{user_id}")
-def get_user(user_id: int, user_service_db: UserServiceDB = Depends(user_service_db)):  
-    user = user_service_db.get_user_id(user_id)
-    return UserDTO(id=user.id, name=user.name, email=user.email, password=user.password)
-
 @router.get("/orm", response_model = List[UserDTO])
 def get_users_orm(user_service_db: UserServiceDB = Depends(user_service_db)):
     users = user_service_db.get_users_orm()
     return [UserDTO(id=user.id, name=user.name, email=user.email, password=user.password) for user in users]
+
+@router.get("/{user_id}")
+def get_user(user_id: int, user_service_db: UserServiceDB = Depends(user_service_db)):  
+    user = user_service_db.get_user_id(user_id)
+    return UserDTO(id=user.id, name=user.name, email=user.email, password=user.password)
 
 @router.get("/orm/{user_id}")
 def get_user(user_id: int, user_service_db: UserServiceDB = Depends(user_service_db)):  
