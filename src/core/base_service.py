@@ -6,11 +6,13 @@ class BaseService:
     """Clase base para manejo centralizado de excepciones en servicios"""
 
     def execute(self, func: Callable[..., Any], *args, **kwargs) -> Any:
-        """Método genérico para manejar excepciones en servicios"""
         try:
-            return func(*args, **kwargs)
+            result = func(*args, **kwargs)
+            if result is None:
+                raise HTTPException(status_code=404, detail="Recurso no encontrado")
+            return result
         except HTTPException:  
-            raise  # No atrapar errores que ya tienen status_code definido
+            raise  
         except ValueError as e:
             logging.warning(f"Error de validación en {func.__name__}: {str(e)}")
             raise HTTPException(status_code=400, detail=f"Error de validación: {str(e)}")

@@ -1,5 +1,6 @@
 from typing import List, Optional
 from src.domain.entity.user import User
+from src.application.dto.user_dto import UserDTO
 from src.core.base_service import BaseService
 from src.infraestructure.repositories.user_repository import UserRepository
 
@@ -12,14 +13,19 @@ class UserServiceDB(BaseService,):  # ✅ Hereda de BaseService
         """Devuelve todos los usuarios, ahora usando BaseService"""
         return self.execute(lambda: self.user_repository.get_users())
     
-    def get_user_id(self, user_id: int) -> User:
+    def get_user_id(self, user_id: int) -> Optional[User]:
         return self.execute(lambda: self.user_repository.get_user(user_id))
     
-    # def create_user(self, user):
-    #     return self.user_repository.create_user(user)
+    def create_user(self, user: UserDTO):
+        user_dict = user.model_dump()
+        self.user_repository.create_user(user_dict)
+        return user
 
     def get_users_orm(self) -> List[User]:
         return self.execute(lambda: self.user_repository.get_users_v2()) 
+
+    def get_user_id_orm(self, user_id: int) -> Optional[User]:
+        return self.execute(lambda: self.user_repository.get_user_v2(user_id))
 
     # def get_users(self):
     #     """Devuelve todos los usuarios, ahora usando BaseService"""

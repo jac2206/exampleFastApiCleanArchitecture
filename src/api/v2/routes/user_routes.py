@@ -12,6 +12,11 @@ def get_users(user_service_db: UserServiceDB = Depends(user_service_db)):
     users = user_service_db.get_users()
     return [UserDTO(id=user.id, name=user.name, email=user.email, password=user.password) for user in users]
 
+@router.post("/", response_model=UserDTO)
+def create_user(user_data: UserDTO, user_service_db: UserServiceDB = Depends(user_service_db)):
+    user_create = user_service_db.create_user(user_data)
+    return UserDTO(id=user_create.id, name=user_create.name, email=user_create.email, password=user_create.password)
+
 @router.get("/{user_id}")
 def get_user(user_id: int, user_service_db: UserServiceDB = Depends(user_service_db)):  
     user = user_service_db.get_user_id(user_id)
@@ -21,3 +26,8 @@ def get_user(user_id: int, user_service_db: UserServiceDB = Depends(user_service
 def get_users_orm(user_service_db: UserServiceDB = Depends(user_service_db)):
     users = user_service_db.get_users_orm()
     return [UserDTO(id=user.id, name=user.name, email=user.email, password=user.password) for user in users]
+
+@router.get("/orm/{user_id}")
+def get_user(user_id: int, user_service_db: UserServiceDB = Depends(user_service_db)):  
+    user = user_service_db.get_user_id_orm(user_id)
+    return UserDTO(id=user.id, name=user.name, email=user.email, password=user.password)
