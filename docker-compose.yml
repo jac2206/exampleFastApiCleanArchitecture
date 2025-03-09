@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  fastapi_app:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    networks:
+      - sqlserver_network
+
+networks:
+  sqlserver_network:
+    driver: bridge

@@ -70,6 +70,7 @@ venv\Scripts\activate     # Windows
 ```bash
 pip install -r requirements.txt
 py -m pip install uvicorn
+py -m pip install python-jose[cryptography]
 ```
 
 ---
@@ -79,13 +80,14 @@ py -m pip install uvicorn
 ```bash
 uvicorn src.main:app --reload
 py -m uvicorn src.main:app --reload
+
 ```
 
 Por defecto, el servidor se ejecuta en **http://127.0.0.1:8000**
 
 ---
 
-## 📌 Endpoints Disponibles
+C
 
 ### 🔹 Health Check (Verifica si el backend está operativo)
 ```bash
@@ -108,6 +110,18 @@ GET http://127.0.0.1:8000/api/v1/user/{user_id}
 Una vez ejecutado el servidor, accede a la documentación automática de la API en:
 - **Swagger UI**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 - **ReDoc**: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
+
+---
+
+---
+
+## Docker
+
+Para agregar dependencias ejecutar primero py -m pip freeze > requirements.txt 
+
+- **Contruir Imagen**: docker build -t my-fastapi-app .
+- **Correr Contenedor**: docker run --env-file .env -p 8000:8000 my-fastapi-app
+- **Con docker-compose**: docker-compose up --build
 
 ---
 

@@ -11,7 +11,7 @@ class UserRepository():
         query = text("SELECT id, name, email, password FROM dbo.[User]")  # ✅ Usando text()
         result = self.db.execute(query).fetchall()
         return result
-    
+    5
     def get_user(self, user_id: int):
         query = text("SELECT id, name, email, password FROM dbo.[User] WHERE id=:id")  # ✅ Usando text()
         result = self.db.execute(query, {"id": user_id}).fetchone()

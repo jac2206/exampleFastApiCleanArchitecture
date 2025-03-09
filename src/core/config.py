@@ -11,6 +11,9 @@ class Config:
     DB_PASSWORD = os.getenv("DB_PASSWORD")
     DB_PORT = os.getenv("DB_PORT")
     BASE_URL_POKEAPI = os.getenv("BASE_URL_POKEAPI")
+    SECRET_KEY = os.getenv("SECRET_KEY")
+    ALGORITHM = os.getenv("ALGORITHM")
+    API_KEY = os.getenv("API_KEY")
 
     @staticmethod
     def get_database_url():
